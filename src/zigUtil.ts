@@ -178,6 +178,13 @@ export function getExePath(exePath: string | null, exeName: string, optionName: 
             fs.accessSync(exePath, fs.constants.R_OK | fs.constants.X_OK);
             return exePath;
         } catch {
+            if (isWindows && !exePath.endsWith('.exe')) {
+                exePath += '.exe';
+                try {
+                    fs.accessSync(exePath, fs.constants.R_OK | fs.constants.X_OK);
+                    return exePath;
+                } catch { }
+            }
             message = `\`${optionName}\` ${exePath} is not an executable`;
         }
     }
